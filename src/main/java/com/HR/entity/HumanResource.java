@@ -1,7 +1,11 @@
 package com.HR.entity;
 import java.time.LocalDate;
-import com.fasterxml.jackson.annotation.JsonFormat;
+import java.util.Date;
 
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
+
+import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -16,116 +20,129 @@ public class HumanResource {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
-	private Integer Userid;
+	private Integer userId;
+	@Column
+	private String name;
+	 
+	@Column
+	private String userName;
+	@Column
+	private String email;
 	
 	@Column
-	private String Name;
-	
+	private String address;
 	@Column
-	private String Username;
-	@Column
-	private String Email;
-	
-	@Column
-	private String Adress;
-	@Column
-	private Long Phoneno;
+	private Long phoneNo;
 	@Column
 	@JsonFormat(pattern = "dd-MM-yyyy")
-	private LocalDate Dob;
+	private LocalDate dob;
 	
 	@Column
-	private String Password;
+	private String password;
 	
 	@Column
-	private String Role;
+	private String role;
+	
+	
+    @Column(name = "date_created")
+    @CreationTimestamp
+    private Date dateCreated;
 
-	public Integer getUserid() {
-		return Userid;
+    public Date getDateCreated() {
+		return dateCreated;
 	}
 
-	public void setUserid(Integer userid) {
-		Userid = userid;
+	public void setDateCreated(Date dateCreated) {
+		this.dateCreated = dateCreated;
+	}
+
+	public Date getLastUpdated() {
+		return lastUpdated;
+	}
+
+	public void setLastUpdated(Date lastUpdated) {
+		this.lastUpdated = lastUpdated;
+	}
+
+	@Column(name = "last_updated")
+    @UpdateTimestamp
+    private Date lastUpdated;
+	
+
+	public Integer getUserId() {
+		return userId;
+	}
+
+	public void setUserId(Integer userId) {
+		this.userId = userId;
 	}
 
 	public String getName() {
-		return Name;
+		return name;
 	}
 
 	public void setName(String name) {
-		Name = name;
+		this.name = name;
 	}
 
-	public String getUsername() {
-		return Username;
+	public String getUserName() {
+		return userName;
 	}
 
-	public void setUsername(String username) {
-		Username = username;
+	public void setUserName(String userName) {
+		this.userName = userName;
 	}
 
 	public String getEmail() {
-		return Email;
+		return email;
 	}
 
 	public void setEmail(String email) {
-		Email = email;
+		this.email = email;
 	}
 
-	public String getAdress() {
-		return Adress;
+	public String getAddress() {
+		return address;
 	}
 
-	public void setAdress(String adress) {
-		Adress = adress;
+	public void setAddress(String address) {
+		this.address = address;
 	}
 
-	public Long getPhoneno() {
-		return Phoneno;
+	public Long getPhoneNo() {
+		return phoneNo;
 	}
 
-	public void setPhoneno(Long phoneno) {
-		Phoneno = phoneno;
+	public void setPhoneNo(Long phoneNo) {
+		this.phoneNo = phoneNo;
 	}
 
 	public LocalDate getDob() {
-		return Dob;
+		return dob;
 	}
 
 	public void setDob(LocalDate dob) {
-		Dob = dob;
+		this.dob = dob;
 	}
 
 	public String getPassword() {
-		return Password;
+		return password;
 	}
 
 	public void setPassword(String password) {
-		Password = password;
+		this.password = password;
 	}
 
 	public String getRole() {
-		return Role;
+		return role;
 	}
 
 	public void setRole(String role) {
-		Role = role;
+		this.role = role;
 	}
 
-	public HumanResource(Integer userid, String name, String username, String email, String adress, Long phoneno,
-			LocalDate dob, String password, String role) {
+	
 
-		Userid = userid;
-		Name = name;
-		Username = username;
-		Email = email;
-		Adress = adress;
-		Phoneno = phoneno;
-		Dob = dob;
-		Password = password;
-		Role = role;
-	}
-
-	public HumanResource() {
-	}
+	
+	
 }
