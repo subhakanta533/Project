@@ -1,13 +1,13 @@
-package com.HR;
+package com.user;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class HumanResurceApplication {
+public class UserApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(HumanResurceApplication.class, args);
+		SpringApplication.run(UserApplication.class, args);
 	}
 
 }

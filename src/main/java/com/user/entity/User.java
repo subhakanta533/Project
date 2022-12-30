@@ -1,4 +1,4 @@
-package com.HR.entity;
+package com.user.entity;
 import java.time.LocalDate;
 import java.util.Date;
 
@@ -12,11 +12,11 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
-
+import com.user.model.*;
 
 @Entity
-@Table(name = "HR_DETAILS")
-public class HumanResource {
+@Table(name = "USER DETAILS")
+public class User {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
