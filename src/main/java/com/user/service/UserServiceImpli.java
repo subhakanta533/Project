@@ -1,5 +1,6 @@
 package com.user.service;
 
+import java.util.Base64;
 import java.util.HashMap;
 import java.util.List;
 
@@ -19,8 +20,13 @@ private UserRepositary repositary;
 @Value("${jwt.token}")
 private String token;
 
+
+
+
 @Override
 public User registerUser(User hr) {
+	String encodePassword=Base64.getEncoder().encodeToString(hr.getPassword().getBytes());
+	hr.setPassword(encodePassword);
 User humanResource=repositary.save(hr);
 return humanResource;
 }
