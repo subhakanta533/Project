@@ -1,4 +1,5 @@
 package com.user.entity;
+
 import java.time.LocalDate;
 import java.util.Date;
 
@@ -23,12 +24,12 @@ public class User {
 	private Integer userId;
 	@Column
 	private String name;
-	 
+
 	@Column
 	private String userName;
 	@Column
 	private String email;
-	
+
 	@Column
 	private String address;
 	@Column
@@ -36,19 +37,18 @@ public class User {
 	@Column
 	@JsonFormat(pattern = "dd-MM-yyyy")
 	private LocalDate dob;
-	
+
 	@Column
 	private String password;
-	
+
 	@Column
 	private String role;
-	
-	
-    @Column(name = "date_created")
-    @CreationTimestamp
-    private Date dateCreated;
 
-    public Date getDateCreated() {
+	@Column(name = "date_created")
+	@CreationTimestamp
+	private Date dateCreated;
+
+	public Date getDateCreated() {
 		return dateCreated;
 	}
 
@@ -65,9 +65,8 @@ public class User {
 	}
 
 	@Column(name = "last_updated")
-    @UpdateTimestamp
-    private Date lastUpdated;
-	
+	@UpdateTimestamp
+	private Date lastUpdated;
 
 	public Integer getUserId() {
 		return userId;
@@ -141,8 +140,4 @@ public class User {
 		this.role = role;
 	}
 
-	
-
-	
-	
 }
