@@ -1,39 +1,41 @@
 package com.user.entity;
-
 import java.time.LocalDate;
-import java.util.Date;
-
 import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.DynamicUpdate;
 import org.hibernate.annotations.UpdateTimestamp;
-
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.ObjectWriter;
+import com.user.enums.Gender;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
-import com.user.model.*;
 
 @Entity
-@Table(name = "USER DETAILS")
-public class User {
+@Table(name = "USER DATA")
+@DynamicUpdate
+public class UserEntity {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Integer userId;
+
 	@Column
 	private String name;
 
 	@Column
-	private String userName;
-	@Column
 	private String email;
 
-	@Column
-	private String address;
+	@Column(columnDefinition = "json")
+	private Object address;
+
 	@Column
 	private Long phoneNo;
+
 	@Column
 	@JsonFormat(pattern = "dd-MM-yyyy")
 	private LocalDate dob;
@@ -44,29 +46,27 @@ public class User {
 	@Column
 	private String role;
 
-	@Column(name = "date_created")
+	@Column
+	private String gender;
+
+	@Column
+	private String createdBy;
+
+	@Column
 	@CreationTimestamp
-	private Date dateCreated;
+	private LocalDate updatedAt;
 
-	public Date getDateCreated() {
-		return dateCreated;
-	}
-
-	public void setDateCreated(Date dateCreated) {
-		this.dateCreated = dateCreated;
-	}
-
-	public Date getLastUpdated() {
-		return lastUpdated;
-	}
-
-	public void setLastUpdated(Date lastUpdated) {
-		this.lastUpdated = lastUpdated;
-	}
-
-	@Column(name = "last_updated")
+	@Column
 	@UpdateTimestamp
-	private Date lastUpdated;
+	private LocalDate createdAt;
+
+	public String getGender() {
+		return gender;
+	}
+
+	public void setGender(Gender gender) {
+		this.gender = gender.getName();
+	}
 
 	public Integer getUserId() {
 		return userId;
@@ -84,28 +84,12 @@ public class User {
 		this.name = name;
 	}
 
-	public String getUserName() {
-		return userName;
-	}
-
-	public void setUserName(String userName) {
-		this.userName = userName;
-	}
-
 	public String getEmail() {
 		return email;
 	}
 
 	public void setEmail(String email) {
 		this.email = email;
-	}
-
-	public String getAddress() {
-		return address;
-	}
-
-	public void setAddress(String address) {
-		this.address = address;
 	}
 
 	public Long getPhoneNo() {
@@ -138,6 +122,43 @@ public class User {
 
 	public void setRole(String role) {
 		this.role = role;
+	}
+
+	public Object getAddress() {
+		return address;
+	}
+
+	public void setAddress(Object address) {
+		try {
+			ObjectWriter ow = new ObjectMapper().writer().withDefaultPrettyPrinter();
+			this.address = ow.writeValueAsString(address);
+		} catch (JsonProcessingException e) {
+			e.printStackTrace();
+		}
+	}
+
+	public String getCreatedBy() {
+		return createdBy;
+	}
+
+	public void setCreatedBy(String createdBy) {
+		this.createdBy = createdBy;
+	}
+
+	public LocalDate getUpdatedAt() {
+		return updatedAt;
+	}
+
+	public void setUpdatedAt(LocalDate updatedAt) {
+		this.updatedAt = updatedAt;
+	}
+
+	public LocalDate getCreatedAt() {
+		return createdAt;
+	}
+
+	public void setCreatedAt(LocalDate createdAt) {
+		this.createdAt = createdAt;
 	}
 
 }

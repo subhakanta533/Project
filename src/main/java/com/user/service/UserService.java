@@ -1,27 +1,31 @@
 package com.user.service;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Optional;
-
-import com.user.entity.User;
+import com.user.entity.UserEntity;
+import com.user.model.UserLoginModel;
+import com.user.model.UserModel;
 
 public interface UserService {
+	public UserEntity saveUser(UserEntity userEntity);
 
-	public User registerUser(User hr);
+	public UserEntity registerUser(UserModel userModel);
 
-	public HashMap<String, Object> loginUser(String email, String password);
+	public UserEntity loginUser(UserLoginModel userLoginModel);
+
+	public List<UserEntity> fetchAllUsers();
+
+	public UserEntity findByEmail(String email);
+
+	public UserEntity findByUserId(Integer userId);
+
+	public UserEntity findbByName(String name);
+
+	public String deleteUserById(Integer userId);
+
+	public String userforgotPassword(String email);
 	
-	public List<User> fetchallusers();
-	
-	public List<User>findbyemail(String email);
-	public List<User>findbyuserid(Integer userId);
-	public List<User>findbyname(String name);
-	public List<User>findbynameandemail(String name,String email);
-	public List<User>findbyuseridandemail(Integer userId,String email);
-	public List<User>findbyuseridandname(Integer userId,String name);
-	public List<User>findbyuseridandnameandemail(String name,String email,Optional<Integer>userId);
-	
-	
+	public String userResetPassword(String token,String email, String password);
+
+	public UserEntity findByPhoneNo(long phoneno);
 
 }

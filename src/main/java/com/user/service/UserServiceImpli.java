@@ -1,17 +1,17 @@
 package com.user.service;
 
+import java.io.IOException;
 import java.io.UnsupportedEncodingException;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Optional;
-
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-
-import com.user.entity.User;
+import com.user.entity.UserEntity;
+import com.user.model.UserLoginModel;
+import com.user.model.UserModel;
 import com.user.repositary.UserRepositary;
-import com.user.util.passwordAuthentication;
+import com.user.transformer.UserTransformer;
+import com.user.util.JwtTokenUtil;
+import com.user.util.PasswordAuthentication;
 
 @Service("service")
 public class UserServiceImpli implements UserService {
@@ -19,93 +19,120 @@ public class UserServiceImpli implements UserService {
 	@Autowired
 	private UserRepositary repositary;
 
-	@Value("${jwt.token}")
-	private String token;
+	@Autowired
+	private PasswordAuthentication pAuthentication;
 
 	@Autowired
-	private passwordAuthentication pAuthentication;
+	private JwtTokenUtil jwt;
+
+	@Autowired
+	private UserTransformer userTransformer;
+	
+	
 
 	@Override
-	public User registerUser(User user) {
-
+	public UserEntity registerUser(UserModel userModel) {
+		UserEntity user = null;
 		try {
+			user = userTransformer.copyPropereties(userModel);
 			String encodedpass = pAuthentication.passwordhashing(user.getPassword());
 			user.setPassword(encodedpass);
-			// User user1=repositary.save(hr);
-
+			user = repositary.save(user);
 		} catch (UnsupportedEncodingException e) {
-
 			e.printStackTrace();
 		}
-
-		User user1 = repositary.save(user);
-		return user1;
+		return user;
 	}
+	
 
 	@Override
-	public HashMap<String, Object> loginUser(String email, String password) {
-
+	public UserEntity loginUser(UserLoginModel userLoginModel) {
+		String encodedpass = "";
 		try {
-			String encodedpass1 = pAuthentication.passwordhashing(password);
-			List<User> user2 = repositary.findByEmailAndPassword(email, encodedpass1);
-
-			if (!user2.isEmpty()) {
-				User User3 = user2.get(0);
-				HashMap<String, Object> hMap = new HashMap<String, Object>();
-				hMap.put("userId", User3.getUserId());
-				hMap.put("token", token);
-				return hMap;
-			}
-
-			return null;
+			encodedpass = pAuthentication.passwordhashing(userLoginModel.getPassword());
 		} catch (UnsupportedEncodingException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-
-		return null;
+		UserEntity userentity = repositary.findByEmailAndPassword(userLoginModel.getEmail(), encodedpass);
+		return userentity != null ? userentity : null;
 	}
 
 	@Override
-	public List<User> fetchallusers() {
+	public List<UserEntity> fetchAllUsers() {
 		return repositary.findAll();
 	}
 
-
-
 	@Override
-	public List<User> findbynameandemail(String name, String email) {
-		return repositary.findByNameAndEmail(name, email);
-	}
-
-	@Override
-	public List<User> findbyuseridandemail(Integer userId, String email) {
-	return repositary.findByUserIdAndEmail(userId, email);
-	}
-
-	@Override
-	public List<User> findbyuseridandname(Integer userId, String name) {
-	return repositary.findByUserIdAndName(userId, name);
-	}
-
-	@Override
-	public List<User> findbyemail(String email) {
+	public UserEntity findByEmail(String email) {
 		return repositary.findByEmail(email);
 	}
 
 	@Override
-	public List<User> findbyuserid(Integer userId) {
-	return repositary.findByUserId(userId);
+	public UserEntity findByUserId(Integer userId) {
+		return repositary.findByUserId(userId);
 	}
 
 	@Override
-	public List<User> findbyname(String name) {
+	public UserEntity findbByName(String name) {
 		return repositary.findByName(name);
 	}
 
 	@Override
-	public List<User> findbyuseridandnameandemail(String name, String email, Optional<Integer> userId) {
-		return repositary.findByNameAndEmailAndUserId(name, email, userId);
+	public String deleteUserById(Integer userId) {
+		repositary.deleteById(userId);
+
+		return "user has been deleted";
 	}
 
+	
+	@Override
+	public String userforgotPassword(String email) {
+		
+         UserEntity userEntity=repositary.findByEmail(email);
+		if (userEntity==null) {
+			return "Invalid email id.";
+		}
+		else {
+			String token=jwt.generateAccessToken(userEntity.getName(), userEntity.getRole(), userEntity.getUserId());
+		return token;
+		}
+
+	}
+
+
+	@Override
+	public UserEntity findByPhoneNo(long phoneno) {
+		return repositary.findByPhoneNo(phoneno);
+	}
+
+	
+	@Override
+	public String userResetPassword(String token,String email, String password) {
+		
+			boolean tokenStatus;
+			try {
+				tokenStatus = jwt.isValidBearerToken(token);
+				if (tokenStatus) {
+					UserEntity userEntity=repositary.findByEmail(email);
+					String encodedPass=pAuthentication.passwordhashing(password);
+					userEntity.setPassword(encodedPass);
+					repositary.save(userEntity);
+					return  "Password has been reseted";
+			    } 
+			}
+				catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			return "Token has been expired";
+	
+		}
+
+
+	@Override
+	public UserEntity saveUser(UserEntity userEntity) {
+		return repositary.save(userEntity);
+	}
+		
 }
+

@@ -12,7 +12,7 @@ import org.apache.commons.codec.binary.Hex;
 import org.springframework.stereotype.Component;
 
 @Component
-public class passwordAuthentication {
+public class PasswordAuthentication {
 
 	public String passwordhashing(String password) throws UnsupportedEncodingException {
 		String salt = "1234";
